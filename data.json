@@ -1,0 +1,93 @@
+{
+  "store_info": [
+    {
+      "id": "1",
+      "name": "Coffee R Us",
+      "description": "Premium craft coffee roasted daily",
+      "phone_number": "(555) 555-0123"
+    }
+  ],
+  "coffee": [
+    {
+      "id": "1",
+      "name": "Ethiopian Yirgacheffe",
+      "description": "Bright floral notes, peach, lemon zest",
+      "origin": "Yirgacheffe, Ethiopia",
+      "price": 18.5,
+      "roast": "Light"
+    },
+    {
+      "id": "2",
+      "name": "Colombian Supremo00",
+      "description": "Caramel sweetness, chocolate finish",
+      "origin": "Huila, Colombia",
+      "price": 16.75,
+      "roast": "Medium"
+    },
+    {
+      "id": "3",
+      "name": "House Dark Roast",
+      "description": "Rich cocoa, smoky depth, bold body",
+      "origin": "Brazil/Vietnam Blend",
+      "price": 14.25,
+      "roast": "Dark"
+    },
+    {
+      "id": "4",
+      "name": "Guatemala Antigua",
+      "description": "Cocoa, almond, subtle citrus",
+      "origin": "Antigua, Guatemala",
+      "price": 19,
+      "roast": "Medium"
+    },
+    {
+      "id": "5",
+      "name": "Kenyan AA",
+      "description": "Blackcurrant, grapefruit, wine-like",
+      "origin": "Nyeri, Kenya",
+      "price": 22.5,
+      "roast": "Light-Medium"
+    },
+    {
+      "id": "6",
+      "name": "Sumatra Mandheling",
+      "description": "Earthy, dark chocolate, herbal",
+      "origin": "Sumatra, Indonesia",
+      "price": 17.25,
+      "roast": "Dark"
+    },
+    {
+      "id": "7",
+      "name": "Vanilla Bean Crème",
+      "description": "Vanilla, cream, caramel infusion",
+      "origin": "Colombia (Flavored)",
+      "price": 15.99,
+      "roast": "Medium"
+    },
+    {
+      "id": "8",
+      "name": "Decaf Swiss Water",
+      "description": "Full flavor decaf, caramel notes",
+      "origin": "Colombia (Decaf)",
+      "price": 17.99,
+      "roast": "Medium"
+    },
+    {
+      "id": "9",
+      "name": "Espresso Blend",
+      "description": "Chocolate, caramel for perfect shots",
+      "origin": "Brazil/Colombia Blend",
+      "price": 16.25,
+      "roast": "Medium-Dark"
+    },
+    {
+      "id": "10",
+      "name": "Panama Geisha",
+      "description": "Jasmine tea, bergamot, ultra-premium",
+      "origin": "Boquete, Panama",
+      "price": 45,
+      "roast": "Light"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
