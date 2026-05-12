@@ -1,7 +1,13 @@
 import React from "react";
+import ProductList from "../components/ProductList";
 
-const Admin = () => {
-    return <div>Admin</div>;
+const Shop = () => {
+    return (
+        <div>
+            <h1>Shop</h1>
+            <ProductList />
+        </div>
+    );
 };
 
-export default Admin;
+export default Shop;
