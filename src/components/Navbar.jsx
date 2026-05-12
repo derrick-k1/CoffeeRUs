@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router'
+import { NavLink } from 'react-router-dom'
 
 function Navbar(){ 
   return (
@@ -53,7 +53,7 @@ function Navbar(){
                         ? 'bg-white text-amber-600 shadow-md shadow-white/25 scale-105' 
                         : 'text-white/90 hover:text-white hover:bg-white/20 hover:shadow-lg'
                     }`
-                  } element="{<Admin />}"
+                  } 
                 >
                   Admin
                 </NavLink>
