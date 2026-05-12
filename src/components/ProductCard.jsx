@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
 const ProductCard = ({ product, onUpdate, onDelete }) => {
+  // Destructure for cleaner code
   const { id, name, description, origin, price } = product;
-  
-  // State for toggling edit mode and handling input
+
+  // Local state for editing
   const [isEditing, setIsEditing] = useState(false);
   const [newPrice, setNewPrice] = useState(price);
 
   const handleSave = () => {
-    // Send the updated price back to the parent/API
-    onUpdate(id, { ...product, price: parseFloat(newPrice) });
+    // Ensure we send a number back, even if input gave us a string
+    const updatedPrice = parseFloat(newPrice);
+    
+    if (!isNaN(updatedPrice)) {
+      onUpdate(id, { ...product, price: updatedPrice });
+    }
+    
     setIsEditing(false);
+  };
+
+  // Helper to safely format price (handles strings like "$1.00" or numbers)
+  const formatPrice = (val) => {
+    const numeric = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.]/g, '')) : val;
+    return isNaN(numeric) ? "0.00" : numeric.toFixed(2);
   };
 
   return (
@@ -20,29 +31,27 @@ const ProductCard = ({ product, onUpdate, onDelete }) => {
         <h3>{name}</h3>
         <span className="origin-tag">{origin}</span>
       </div>
-      
+
       <p className="description">{description}</p>
-      
+
       <div className="price-section">
         <label>Price: </label>
         {isEditing ? (
           <div className="edit-group">
-            <input 
-              type="number" 
-              value={newPrice} 
+            <input
+              type="number"
+              value={newPrice}
               onChange={(e) => setNewPrice(e.target.value)}
               step="0.01"
               autoFocus
             />
-            <button className="save-btn" onClick={handleSave}>Save</button>
-            <button className="cancel-btn" onClick={() => setIsEditing(false)}>✕</button>
+            <button onClick={handleSave}>Save</button>
+            <button onClick={() => setIsEditing(false)}>Cancel</button>
           </div>
         ) : (
           <div className="display-group">
-            <span className="price-value">${price.toFixed(2)}</span>
-            <button className="edit-btn" onClick={() => setIsEditing(true)}>
-              Edit Price
-            </button>
+            <span className="price-value">${formatPrice(price)}</span>
+            <button onClick={() => setIsEditing(true)}>Edit Price</button>
           </div>
         )}
       </div>
@@ -52,23 +61,8 @@ const ProductCard = ({ product, onUpdate, onDelete }) => {
           Remove Product
         </button>
       </div>
-
-      
     </div>
   );
-};
-
-// Robust Prop-Types validation
-ProductCard.propTypes = {
-  product: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    origin: PropTypes.string,
-    price: PropTypes.number.isRequired,
-  }).isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
 };
 
 export default ProductCard;

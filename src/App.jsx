@@ -4,7 +4,7 @@ import  Navbar  from './components/Navbar'
 import Home from './pages/Home'
 import Admin from './pages/Admin'
 import Shop from './pages/Shop'
-
+import ProductCard from './components/ProductCard'
 
 function  App(){
   return (
