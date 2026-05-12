@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react'
 
-export const ProductList = () => {
+function ProductList() {
 const BASE_URL = ''
 const [products, setProducts] = useState([])
 useEffect(()=>{
@@ -29,3 +29,4 @@ useEffect(()=>{
   )
 }
 
+export default ProductList
