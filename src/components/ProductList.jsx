@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 
 function ProductList() {
-const BASE_URL = ''
+const BASE_URL = 'http://localhost:4000/coffee'
 const [products, setProducts] = useState([])
 useEffect(()=>{
     const fetchProducts = async () =>{
