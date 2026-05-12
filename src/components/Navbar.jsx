@@ -32,7 +32,7 @@ function Navbar(){
               </li>
               <li>
                 <NavLink 
-                  to="/about" 
+                  to="/shop" 
                   className={({ isActive }) =>
                     `nav-link px-4 py-2 rounded-full font-semibold transition-all duration-300 ${
                       isActive 
@@ -41,21 +41,21 @@ function Navbar(){
                     }`
                   }
                 >
-                  About
+                  Shop
                 </NavLink>
               </li>
               <li>
                 <NavLink 
-                  to="/contact" 
+                  to="/admin" 
                   className={({ isActive }) =>
                     `nav-link px-4 py-2 rounded-full font-semibold transition-all duration-300 ${
                       isActive 
                         ? 'bg-white text-amber-600 shadow-md shadow-white/25 scale-105' 
                         : 'text-white/90 hover:text-white hover:bg-white/20 hover:shadow-lg'
                     }`
-                  }
+                  } element="{<Admin />}"
                 >
-                  Contact
+                  Admin
                 </NavLink>
               </li>
             </ul>
