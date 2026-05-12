@@ -9,7 +9,7 @@ function Navbar(){
           {/* Logo */}
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg hover:scale-105 transition-transform duration-200">
-              ☕ Coffee R Us
+              ☕ Coffee Rr Us
             </h1>
           </div>
           
