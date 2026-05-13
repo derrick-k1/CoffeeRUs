@@ -1,155 +1,92 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useProducts } from '../context/ProductsContext';
 import ProductForm from '../components/ProductForm';
-
-/* Uncomment these when you're ready to link your logic:
-  import { useProducts } from '../context/ProductsContext' 
-*/
-
-// ProductList
-const ProductList = ({ products, onEdit, onDelete }) => (
-  <div className="grid gap-4">
-    {products.map(p => (
-      <div key={p.id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center">
-        <div>
-          <h4 className="font-bold text-slate-800">{p.name}</h4>
-          <p className="text-sm text-slate-500">${p.price}</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => onEdit(p)} className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-semibold">Edit</button>
-          <button onClick={() => onDelete(p.id)} className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-semibold">Delete</button>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+import ProductCard from '../components/ProductCard';
 
 export default function Admin() {
-  const [products, setProducts] = useState([]);
+  const { products, addProduct, updateProduct, removeProduct, loading } = useProducts();
   const [editing, setEditing] = useState(null);
 
-  function fetchCoffee() {
-    fetch('http://localhost:4000/coffee')
-      .then(res => res.json())
-      .then(data => setProducts(data));
-  }
-
-  useEffect(() => {
-    fetchCoffee();
-  }, []);
-
-  async function handleAdd(payload) {
-    await fetch('http://localhost:4000/coffee', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...payload,
-        status: "active"
-      })
-    });
-
-    fetchCoffee();
-  }
-
-  async function handleUpdate(payload) {
-    await fetch(`http://localhost:4000/coffee/${editing.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...editing, ...payload })
-    });
-
-    setEditing(null);
-    fetchCoffee();
-  }
-
-  async function handleDelete(id) {
-    const ok = confirm('Delete?');
-    if (!ok) return;
-
-    await fetch(`http://localhost:4000/coffee/${id}`, {
-      method: 'DELETE'
-    });
-
-    fetchCoffee();
-  }
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-[#fafaf9]">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-800"></div>
+    </div>
+  );
 
   return (
-    <section className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
-
-      {/* KEEP EXACT SAME LAYOUT */}
-      <div className="max-w-7xl mx-auto mb-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">
-            Admin Dashboard
-          </h1>
-          <p className="mt-4 text-xl text-slate-500 max-w-2xl mx-auto">
-            Manage your coffee inventory with precision
-          </p>
+    <section className="min-h-screen bg-[#fafaf9] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Header Section */}
+        <div className="mb-12">
+          <h1 className="text-4xl font-black text-stone-900 tracking-tight">Inventory Manager</h1>
+          <p className="text-stone-500 mt-2 font-medium">Create, update, or remove your signature coffee blends.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {[
-            { label: 'Total Coffees', value: products.length },
-            { label: 'Active Blends', value: products.filter(p => (p.status || 'active') === 'active').length },
-            { label: 'Avg Price', value: `$${(products.reduce((sum, p) => sum + Number(p.price || 0), 0) / products.length || 0).toFixed(2)}` }
-          ].map((stat, i) => (
-            <div key={i} className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all">
-              <h3 className="text-3xl font-black text-slate-900 mb-2">{stat.value}</h3>
-              <p className="text-slate-500 font-medium">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* KEEP EXACT SAME GRID */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-8 lg:gap-12">
-
-        {/* FORM SIDE */}
-        <div className="xl:sticky xl:top-12 self-start">
-          <div className="bg-white/80 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-xl p-8 lg:p-10">
-
-            <div className="mb-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold">
-                  {editing ? '!' : '+'}
-                </div>
-
-                <div>
-                  <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-                    {editing ? 'Edit Blend' : 'Add Coffee'}
-                  </h3>
-                  <p className="text-slate-500 text-sm">
-                    {editing ? 'Update existing details' : 'Create a signature blend'}
-                  </p>
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[400px_1fr] gap-12 items-start">
+          
+          {/* LEFT: Add/Edit Section */}
+          <aside className="lg:sticky lg:top-24">
+            <div className="bg-white rounded-[2.5rem] border border-stone-200 shadow-xl overflow-hidden">
+              {/* Header for the Form */}
+              <div className="bg-[#2d241e] p-8 text-white">
+                <h3 className="text-2xl font-bold">
+                  {editing ? 'Edit Coffee' : 'Add New Blend'}
+                </h3>
+                <p className="text-stone-400 text-sm mt-1">
+                  {editing ? 'Update the details for this specific product.' : 'Enter details for a new inventory item.'}
+                </p>
+              </div>
+              
+              {/* The Form */}
+              <div className="p-8">
+                <ProductForm 
+                  initial={editing} 
+                  onSubmit={editing ? (data) => { updateProduct(editing.id, data); setEditing(null); } : addProduct} 
+                />
+                
+                {editing && (
+                  <button 
+                    onClick={() => setEditing(null)}
+                    className="w-full mt-3 text-sm font-bold text-stone-400 hover:text-stone-600 transition-colors"
+                  >
+                    Cancel Editing
+                  </button>
+                )}
               </div>
             </div>
+          </aside>
 
-            <ProductForm
-              initial={editing || {}}
-              onSubmit={editing ? handleUpdate : handleAdd}
-            />
+          {/* RIGHT: Product Feed Section */}
+          <main>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-xl font-black text-stone-900 uppercase tracking-widest">
+                Current Stock ({products?.length})
+              </h2>
+              <div className="h-px flex-1 bg-stone-200 mx-6 hidden sm:block"></div>
+            </div>
 
-            {editing && (
-              <button
-                onClick={() => setEditing(null)}
-                className="mt-4 w-full text-sm text-slate-400 hover:text-slate-600 underline"
-              >
-                Cancel Editing
-              </button>
+            {products?.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {products.map((product) => (
+                  <ProductCard 
+                    key={product.id}
+                    product={product}
+                    onEdit={setEditing} // This scrolls the form into focus when clicked
+                    onDelete={removeProduct}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="bg-white rounded-[2.5rem] border-2 border-dashed border-stone-200 p-20 text-center">
+                <span className="text-5xl mb-4 block">☕</span>
+                <h3 className="text-xl font-bold text-stone-900">No products found</h3>
+                <p className="text-stone-400">Your inventory is currently empty. Start by adding a blend!</p>
+              </div>
             )}
+          </main>
 
-          </div>
         </div>
-
-        {/* LIST SIDE */}
-        <div className="space-y-10">
-          <ProductList
-            products={products}
-            onEdit={setEditing}
-            onDelete={handleDelete}
-          />
-        </div>
-
       </div>
     </section>
   );
