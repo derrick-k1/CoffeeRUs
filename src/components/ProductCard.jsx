@@ -1,100 +1,98 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const ProductCard = ({ product, onUpdate, onDelete }) => {
-  // Destructure for cleaner code
-  const { id, name, description, origin, price } = product;
+const ProductCard = ({ product, onEdit, onDelete }) => {
+  // Added 'image' and 'roast' to destructuring
+  const { id, name, description, origin, price, image, roast } = product;
 
-  // Local state for editing
-  const [isEditing, setIsEditing] = useState(false);
-  const [newPrice, setNewPrice] = useState(price);
-
-  const handleSave = () => {
-    // Ensure we send a number back, even if input gave us a string
-    const updatedPrice = parseFloat(newPrice);
-    
-    if (!isNaN(updatedPrice)) {
-      onUpdate(id, { ...product, price: updatedPrice });
-    }
-    
-    setIsEditing(false);
-  };
-
-  // Helper to safely format price (handles strings like "$1.00" or numbers)
   const formatPrice = (val) => {
     const numeric = typeof val === 'string' ? parseFloat(val.replace(/[^0-9.]/g, '')) : val;
     return isNaN(numeric) ? "0.00" : numeric.toFixed(2);
   };
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ring-1 ring-gray-200">
-  
-  {/* Card Header & Content */}
-  <div className="p-6">
-    <div className="flex items-start justify-between mb-2">
-      <h3 className="text-xl font-bold text-gray-900 tracking-tight leading-tight">
-        {name}
-      </h3>
-      <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
-        {origin}
-      </span>
-    </div>
-
-    <p className="text-sm leading-relaxed text-gray-500 line-clamp-3">
-      {description}
-    </p>
-
-    {/* Price Section */}
-    <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
-      <div className="flex flex-col">
-        <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Price</span>
-        {isEditing ? (
-          <div className="mt-2 flex gap-2">
-            <input
-              type="number"
-              value={newPrice}
-              onChange={(e) => setNewPrice(e.target.value)}
-              step="0.01"
-              autoFocus
-              className="w-24 rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-            <button onClick={handleSave} className="rounded-md bg-indigo-600 px-3 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500">
-              Save
-            </button>
-            <button onClick={() => setIsEditing(false)} className="text-xs font-semibold text-gray-600 hover:text-gray-900">
-              Cancel
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-gray-900">
-              ${formatPrice(price)}
+    <div className="group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl border border-stone-200">
+      
+      {/* 1. Image Header */}
+      <div className="relative h-52 w-full overflow-hidden">
+        <img 
+          src={image || "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800&auto=format&fit=crop"} 
+          alt={name}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+        {/* Dark overlay gradient for text legibility if needed */}
+        <div className="absolute inset-0 bg-gradient-to-t from-stone-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        
+        {/* Roast Tag - Floating over image */}
+        {roast && (
+          <div className="absolute top-4 left-4">
+            <span className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-stone-900 shadow-sm">
+              {roast}
             </span>
-            <button 
-              onClick={() => setIsEditing(true)}
-              className="text-xs font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
-            >
-              Edit
-            </button>
           </div>
         )}
       </div>
+
+      {/* 2. Content Body */}
+      <div className="p-6 flex flex-col flex-1">
+        <div className="flex items-start justify-between mb-3">
+          <h3 className="text-xl font-black text-stone-900 tracking-tight leading-tight group-hover:text-amber-700 transition-colors">
+            {name}
+          </h3>
+        </div>
+
+        <div className="flex items-center gap-2 mb-4">
+           <span className="inline-flex items-center rounded-lg bg-stone-100 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-stone-500">
+            {origin}
+          </span>
+        </div>
+
+        <p className="text-sm leading-relaxed text-stone-500 line-clamp-2 mb-6 italic">
+          "{description}"
+        </p>
+
+        {/* 3. Price & Stats */}
+        <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Price</span>
+            <span className="text-2xl font-black text-stone-900">
+              ${formatPrice(price)}
+            </span>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            {onEdit && (
+              <button 
+                onClick={() => onEdit(product)}
+                className="p-3 rounded-2xl bg-stone-100 text-stone-600 hover:bg-stone-900 hover:text-white transition-all shadow-sm active:scale-90"
+                title="Edit Product"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </button>
+            )}
+            
+            {onDelete && (
+              <button 
+                onClick={() => {
+                  if(window.confirm(`Remove ${name}?`)) onDelete(id);
+                }}
+                className="p-3 rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-90"
+                title="Delete Product"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Subtle hover accent bar */}
+      <div className="absolute top-0 left-0 right-0 h-1.5 bg-amber-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
     </div>
-  </div>
-
-  {/* Footer Actions */}
-  <div className="mt-auto flex border-t border-gray-100 bg-gray-50/50 p-4">
-    <button 
-      className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 hover:text-red-700" 
-      onClick={() => onDelete(id)}
-    >
-      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-      </svg>
-      Remove Product
-    </button>
-  </div>
-</div>
-
   );
 };
 
