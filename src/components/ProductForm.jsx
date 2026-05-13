@@ -1,99 +1,116 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
-function ProductForm({ initial, onSubmit }) {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [origin, setOrigin] = useState('');
+export default function ProductForm({ initial, onSubmit }) {
+    // 1. Single state object for cleaner code
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        origin: ''
+    });
 
-    // ✅ THIS IS THE FIX (auto-fill when editing)
+    // 2. ✅ Auto-fill when editing (Syncing with the 'initial' prop)
     useEffect(() => {
         if (initial?.id) {
-            setName(initial.name || '');
-            setDescription(initial.description || '');
-            setPrice(initial.price || '');
-            setOrigin(initial.origin || '');
+            setFormData({
+                name: initial.name || '',
+                description: initial.description || '',
+                price: initial.price || '',
+                origin: initial.origin || ''
+            });
         } else {
-            setName('');
-            setDescription('');
-            setPrice('');
-            setOrigin('');
+            setFormData({ name: '', description: '', price: '', origin: '' });
         }
     }, [initial]);
+
+    // 3. Generic handler to update any field
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     function handleSubmit(event) {
         event.preventDefault();
 
+        // Pass the data up with the same logic as your current code
         onSubmit({
             id: initial?.id || Date.now(),
-            name,
-            description,
-            price: Number(price),
-            origin,
+            ...formData,
+            price: Number(formData.price),
             status: "active"
         });
 
-        // clear ONLY after adding, not during edit
+        // ✅ Clear ONLY after adding new coffee, not during edit
         if (!initial?.id) {
-            setName('');
-            setDescription('');
-            setPrice('');
-            setOrigin('');
+            setFormData({ name: '', description: '', price: '', origin: '' });
         }
     }
 
     return (
-        <form onSubmit={handleSubmit}
-            className="bg-white p-6 rounded-lg shadow-md space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Field: Name */}
+            <div>
+                <label className="text-xs font-bold uppercase text-stone-400 tracking-widest ml-1">Coffee Name</label>
+                <input
+                    name="name"
+                    type="text"
+                    placeholder="e.g. Ethiopian Yirgacheffe"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full mt-1 px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                    required
+                />
+            </div>
 
-            <h2 className="text-2xl font-bold">
-                {initial?.id ? "Edit Coffee" : "Add new Coffee"}
-            </h2>
+            {/* Field: Description */}
+            <div>
+                <label className="text-xs font-bold uppercase text-stone-400 tracking-widest ml-1">Description</label>
+                <input
+                    name="description"
+                    type="text"
+                    placeholder="Floral notes with citrus acidity..."
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full mt-1 px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 focus:ring-2 focus:ring-amber-500 outline-none transition-all"
+                    required
+                />
+            </div>
 
-            <input
-                type="text"
-                placeholder='Coffee Name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className='w-full border p-2 rounded'
-                required
-            />
+            {/* Grid for Origin and Price */}
+            <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <label className="text-xs font-bold uppercase text-stone-400 tracking-widest ml-1">Origin</label>
+                    <input
+                        name="origin"
+                        type="text"
+                        placeholder="Ethiopia"
+                        value={formData.origin}
+                        onChange={handleChange}
+                        className="w-full mt-1 px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 outline-none focus:border-amber-500"
+                        required
+                    />
+                </div>
+                <div>
+                    <label className="text-xs font-bold uppercase text-stone-400 tracking-widest ml-1">Price ($)</label>
+                    <input
+                        name="price"
+                        type="number"
+                        placeholder="18.00"
+                        value={formData.price}
+                        onChange={handleChange}
+                        className="w-full mt-1 px-4 py-3 rounded-xl border border-stone-200 bg-stone-50 outline-none focus:border-amber-500"
+                        required
+                    />
+                </div>
+            </div>
 
-            <input
-                type="text"
-                placeholder='Description'
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className='w-full border p-2 rounded'
-                required
-            />
-
-            <input
-                type="text"
-                placeholder="Origin"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                className='w-full border p-2 rounded'
-                required
-            />
-
-            <input
-                type="number"
-                placeholder='Price'
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className='w-full border p-2 rounded'
-                required
-            />
-
+            {/* Submit Button */}
             <button
                 type="submit"
-                className='bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-300'
+                className="w-full py-4 bg-[#2d241e] hover:bg-amber-800 text-white font-bold rounded-2xl shadow-lg transition-all active:scale-[0.98]"
             >
                 {initial?.id ? "Update Product" : "Add Product"}
             </button>
         </form>
-    )
+    );
 }
-
-export default ProductForm
