@@ -1,101 +1,104 @@
 {
-  "store_info": [
-    {
-      "id": 1,
-      "name": "Coffee R Us",
-      "description": "Premium craft coffee roasted daily",
-      "phone_number": "(555) 555-0123"
-    }
-  ],
   "coffee": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Ethiopian Yirgacheffe",
       "description": "Bright floral notes, peach, lemon zest",
       "origin": "Yirgacheffe, Ethiopia",
       "price": 18.75,
       "roast": "Light",
-      "status": "active"
+      "status": "active",
+      "image": "https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Colombian Supremo00",
       "description": "Caramel sweetness, chocolate finish",
       "origin": "Huila, Colombia",
       "price": 16.75,
-      "roast": "Medium"
+      "roast": "Medium",
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "House Dark Roast",
       "description": "Rich cocoa, smoky depth, bold body",
       "origin": "Brazil/Vietnam Blend",
       "price": 14.25,
-      "roast": "Dark"
+      "roast": "Dark",
+      "image": "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Guatemala Antigua",
       "description": "Cocoa, almond, subtle citrus",
       "origin": "Antigua, Guatemala",
       "price": 19,
-      "roast": "Medium"
+      "roast": "Medium",
+      "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Kenyan AA",
       "description": "Blackcurrant, grapefruit, wine-like",
       "origin": "Nyeri, Kenya",
       "price": 22.5,
-      "roast": "Light-Medium"
+      "roast": "Light-Medium",
+      "image": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "Sumatra Mandheling",
       "description": "Earthy, dark chocolate, herbal",
       "origin": "Sumatra, Indonesia",
       "price": 17.25,
-      "roast": "Dark"
+      "roast": "Dark",
+      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "Vanilla Bean Crème",
       "description": "Vanilla, cream, caramel infusion",
       "origin": "Colombia (Flavored)",
       "price": 15.99,
-      "roast": "Medium"
+      "roast": "Medium",
+      "image": "https://images.unsplash.com/photo-1544787210-282aa3016a24?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 8,
+      "id": "8",
       "name": "Decaf Swiss Water",
       "description": "Full flavor decaf, caramel notes",
       "origin": "Colombia (Decaf)",
       "price": 17.99,
-      "roast": "Medium"
+      "roast": "Medium",
+      "image": "https://images.unsplash.com/photo-1521302080334-4bebac2763a6?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 9,
+      "id": "9",
       "name": "Espresso Blend",
       "description": "Chocolate, caramel for perfect shots",
       "origin": "Brazil/Colombia Blend",
       "price": 16.25,
-      "roast": "Medium-Dark"
+      "roast": "Medium-Dark",
+      "image": "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 10,
+      "id": "10",
       "name": "Panama Geisha",
       "description": "Jasmine tea, bergamot, ultra-premium",
       "origin": "Boquete, Panama",
       "price": 45,
-      "roast": "Light"
+      "roast": "Light",
+      "image": "https://images.unsplash.com/photo-1497933321188-941f9ad36b12?q=80&w=800&auto=format&fit=crop"
     },
     {
-      "id": 1778661446941,
+      "id": "1778661446941",
       "name": "Mocha Hazelnut",
-      "description": "im just testing the adding feature",
+      "description": "Smooth hazelnut chocolate infusion",
       "price": 35.23,
       "origin": "Brazil",
-      "status": "active"
+      "status": "active",
+      "image": "https://images.unsplash.com/photo-1506372023823-741c83b836fe?q=80&w=800&auto=format&fit=crop"
     }
   ]
 }
