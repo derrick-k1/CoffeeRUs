@@ -15,7 +15,7 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
       {/* 1. Image Header */}
       <div className="relative h-52 w-full overflow-hidden">
         <img 
-          src={image || "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800&auto=format&fit=crop"} 
+          src={image || `https://source.unsplash.com/400x300/?coffee-beans,${name}`} 
           alt={name}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
