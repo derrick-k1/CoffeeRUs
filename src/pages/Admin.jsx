@@ -1,26 +1,34 @@
 import React, { useState } from 'react';
+import ProductForm from '../components/ProductForm';
+
 /* Uncomment these when you're ready to link your logic:
   import { useProducts } from '../context/ProductsContext' 
 */
 
-// Placeholder Components - Replace with your actual imports
-const ProductForm = ({ initial, onSubmit }) => (
-  <div className="text-sm text-slate-500 italic p-4 border-2 border-dashed border-slate-200 rounded-xl">
-    ProductForm Component Goes Here
-  </div>
-);
-
 const ProductList = ({ products, onEdit, onDelete }) => (
   <div className="grid gap-4">
     {products.map(p => (
-      <div key={p.id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center">
+      <div
+        key={p.id}
+        className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex justify-between items-center"
+      >
         <div>
           <h4 className="font-bold text-slate-800">{p.name}</h4>
           <p className="text-sm text-slate-500">${p.price}</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => onEdit(p)} className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-semibold">Edit</button>
-          <button onClick={() => onDelete(p.id)} className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-semibold">Delete</button>
+          <button
+            onClick={() => onEdit(p)}
+            className="px-4 py-2 bg-slate-100 rounded-lg text-sm font-semibold"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => onDelete(p.id)}
+            className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-semibold"
+          >
+            Delete
+          </button>
         </div>
       </div>
     ))}
@@ -30,16 +38,42 @@ const ProductList = ({ products, onEdit, onDelete }) => (
 export default function Admin() {
   /* Logic Placeholders */
   const [products, setProducts] = useState([
-    { id: 1, name: 'Ethiopian Yirgacheffe', price: 18.50, status: 'active' },
-    { id: 2, name: 'Colombian Dark Roast', price: 15.00, status: 'active' }
+    { id: 1, name: 'Ethiopian Yirgacheffe', description: '', price: 18.50, origin: '', status: 'active' },
+    { id: 2, name: 'Colombian Dark Roast', description: '', price: 15.00, origin: '', status: 'active' }
   ]);
+
   const [editing, setEditing] = useState(null);
 
   // const { products, addProduct, updateProduct, removeProduct } = useProducts()
 
-  async function handleAdd(payload) { console.log("Add:", payload); }
-  async function handleUpdate(patch) { console.log("Update:", patch); setEditing(null); }
-  async function handleDelete(id) { confirm('Delete?'); }
+  async function handleAdd(payload) {
+    console.log("Add:", payload);
+
+    const newProduct = {
+      ...payload,
+      id: Date.now(),
+      status: 'active'
+    };
+
+    setProducts(prev => [newProduct, ...prev]);
+  }
+
+  async function handleUpdate(payload) {
+    console.log("Update:", payload);
+
+    setProducts(prev =>
+      prev.map(p =>
+        p.id === editing.id ? { ...p, ...payload } : p
+      )
+    );
+
+    setEditing(null);
+  }
+
+  async function handleDelete(id) {
+    confirm('Delete?');
+    setProducts(prev => prev.filter(p => p.id !== id));
+  }
 
   return (
     <section className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
@@ -53,7 +87,7 @@ export default function Admin() {
             Manage your coffee inventory with precision
           </p>
         </div>
-        
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {[
@@ -71,7 +105,7 @@ export default function Admin() {
 
       {/* Main Grid Layout */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-8 lg:gap-12">
-        
+
         {/* Sticky Form Sidebar */}
         <div className="xl:sticky xl:top-12 self-start">
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-xl p-8 lg:p-10">
@@ -90,14 +124,14 @@ export default function Admin() {
                 </div>
               </div>
             </div>
-            
-            <ProductForm 
-              initial={editing || {}} 
+
+            <ProductForm
+              initial={editing || {}}
               onSubmit={editing ? handleUpdate : handleAdd}
             />
 
             {editing && (
-              <button 
+              <button
                 onClick={() => setEditing(null)}
                 className="mt-4 w-full text-sm text-slate-400 hover:text-slate-600 underline"
               >
@@ -116,6 +150,7 @@ export default function Admin() {
               </h2>
               <p className="text-slate-500 mt-2">Control your collection</p>
             </div>
+
             <div className="bg-white px-6 py-3 rounded-2xl border border-slate-200 shadow-sm">
               <span className="text-slate-400 font-medium">Count: </span>
               <span className="font-black text-slate-900 text-xl">{products.length}</span>
@@ -123,10 +158,10 @@ export default function Admin() {
           </div>
 
           {products.length > 0 ? (
-            <ProductList 
-              products={products} 
-              onEdit={setEditing} 
-              onDelete={handleDelete} 
+            <ProductList
+              products={products}
+              onEdit={setEditing}
+              onDelete={handleDelete}
             />
           ) : (
             <div className="bg-white rounded-3xl border-2 border-dashed border-slate-200 p-20 text-center">
