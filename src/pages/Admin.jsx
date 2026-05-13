@@ -1,59 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import ProductForm from '../components/ProductForm';
 
 /* Uncomment these when you're ready to link your logic:
   import { useProducts } from '../context/ProductsContext' 
 */
 
-// Placeholder Components (DO NOT TOUCH LAYOUT)
-const ProductForm = ({ initial, onSubmit }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [origin, setOrigin] = useState('');
-
-  useEffect(() => {
-    setName(initial?.name || '');
-    setDescription(initial?.description || '');
-    setPrice(initial?.price || '');
-    setOrigin(initial?.origin || '');
-  }, [initial]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    onSubmit({
-      name,
-      description,
-      price: Number(price),
-      origin
-    });
-
-    if (!initial?.id) {
-      setName('');
-      setDescription('');
-      setPrice('');
-      setOrigin('');
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-2xl font-bold">
-        {initial?.id ? "Edit Coffee" : "Add Coffee"}
-      </h2>
-
-      <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" className="w-full border p-2 rounded" />
-      <input value={description} onChange={e => setDescription(e.target.value)} placeholder="Description" className="w-full border p-2 rounded" />
-      <input value={origin} onChange={e => setOrigin(e.target.value)} placeholder="Origin" className="w-full border p-2 rounded" />
-      <input value={price} onChange={e => setPrice(e.target.value)} placeholder="Price" type="number" className="w-full border p-2 rounded" />
-
-      <button className="bg-orange-500 text-white px-4 py-2 rounded">
-        {initial?.id ? "Update" : "Add"}
-      </button>
-    </form>
-  );
-};
-
+// ProductList
 const ProductList = ({ products, onEdit, onDelete }) => (
   <div className="grid gap-4">
     {products.map(p => (
@@ -72,97 +24,58 @@ const ProductList = ({ products, onEdit, onDelete }) => (
 );
 
 export default function Admin() {
-
   const [products, setProducts] = useState([]);
   const [editing, setEditing] = useState(null);
 
-  // =========================
-  // LOAD FROM data.json → coffee[]
-  // =========================
-  useEffect(() => {
+  function fetchCoffee() {
     fetch('http://localhost:4000/coffee')
       .then(res => res.json())
       .then(data => setProducts(data));
+  }
+
+  useEffect(() => {
+    fetchCoffee();
   }, []);
 
-  // =========================
-  // ADD → updates BOTH adminCoffee + coffee
-  // =========================
   async function handleAdd(payload) {
-
-    const newItem = {
-      ...payload,
-      status: "active"
-    };
-
-    // add to adminCoffee
-    const adminRes = await fetch('http://localhost:4000/adminCoffee', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newItem)
-    });
-
-    const created = await adminRes.json();
-
-    // add to coffee (SHOP)
     await fetch('http://localhost:4000/coffee', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(created)
+      body: JSON.stringify({
+        ...payload,
+        status: "active"
+      })
     });
 
-    setProducts(prev => [created, ...prev]);
+    fetchCoffee();
   }
 
-  // =========================
-  // UPDATE → updates BOTH
-  // =========================
   async function handleUpdate(payload) {
-
-    const updated = { ...editing, ...payload };
-
-    await fetch(`http://localhost:4000/adminCoffee/${editing.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated)
-    });
-
     await fetch(`http://localhost:4000/coffee/${editing.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updated)
+      body: JSON.stringify({ ...editing, ...payload })
     });
-
-    setProducts(prev =>
-      prev.map(p => (p.id === editing.id ? updated : p))
-    );
 
     setEditing(null);
+    fetchCoffee();
   }
 
-  // =========================
-  // DELETE → removes from BOTH
-  // =========================
   async function handleDelete(id) {
-
-    const ok = confirm('Delete this coffee?');
+    const ok = confirm('Delete?');
     if (!ok) return;
-
-    await fetch(`http://localhost:4000/adminCoffee/${id}`, {
-      method: 'DELETE'
-    });
 
     await fetch(`http://localhost:4000/coffee/${id}`, {
       method: 'DELETE'
     });
 
-    setProducts(prev => prev.filter(p => p.id !== id));
+    fetchCoffee();
   }
 
   return (
     <section className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
 
-      {/* HEADER (UNCHANGED) */}
+      {/* KEEP EXACT SAME LAYOUT */}
       <div className="max-w-7xl mx-auto mb-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">
@@ -173,14 +86,13 @@ export default function Admin() {
           </p>
         </div>
 
-        {/* STATS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {[
             { label: 'Total Coffees', value: products.length },
-            { label: 'Active Blends', value: products.length },
-            { label: 'Avg Price', value: `$${(products.reduce((s, p) => s + p.price, 0) / products.length || 0).toFixed(2)}` }
+            { label: 'Active Blends', value: products.filter(p => (p.status || 'active') === 'active').length },
+            { label: 'Avg Price', value: `$${(products.reduce((sum, p) => sum + Number(p.price || 0), 0) / products.length || 0).toFixed(2)}` }
           ].map((stat, i) => (
-            <div key={i} className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+            <div key={i} className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all">
               <h3 className="text-3xl font-black text-slate-900 mb-2">{stat.value}</h3>
               <p className="text-slate-500 font-medium">{stat.label}</p>
             </div>
@@ -188,12 +100,29 @@ export default function Admin() {
         </div>
       </div>
 
-      {/* MAIN LAYOUT (UNCHANGED) */}
+      {/* KEEP EXACT SAME GRID */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-8 lg:gap-12">
 
-        {/* FORM SIDE (UNCHANGED POSITION) */}
+        {/* FORM SIDE */}
         <div className="xl:sticky xl:top-12 self-start">
           <div className="bg-white/80 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-xl p-8 lg:p-10">
+
+            <div className="mb-8">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold">
+                  {editing ? '!' : '+'}
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                    {editing ? 'Edit Blend' : 'Add Coffee'}
+                  </h3>
+                  <p className="text-slate-500 text-sm">
+                    {editing ? 'Update existing details' : 'Create a signature blend'}
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <ProductForm
               initial={editing || {}}
@@ -212,30 +141,15 @@ export default function Admin() {
           </div>
         </div>
 
-        {/* INVENTORY (REAL data.json coffee ARRAY) */}
+        {/* LIST SIDE */}
         <div className="space-y-10">
-
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
-                Inventory Management
-              </h2>
-              <p className="text-slate-500 mt-2">Control your collection</p>
-            </div>
-
-            <div className="bg-white px-6 py-3 rounded-2xl border border-slate-200 shadow-sm">
-              <span className="text-slate-400 font-medium">Count: </span>
-              <span className="font-black text-slate-900 text-xl">{products.length}</span>
-            </div>
-          </div>
-
           <ProductList
             products={products}
             onEdit={setEditing}
             onDelete={handleDelete}
           />
-
         </div>
+
       </div>
     </section>
   );
