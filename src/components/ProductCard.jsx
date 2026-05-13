@@ -10,89 +10,132 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
   };
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-[2.5rem] bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl border border-stone-200">
+   <div className="group relative flex flex-col overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#1c120d] to-[#120b08] border border-orange-900/30 shadow-[0_10px_40px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(249,115,22,0.25)]">
+  
+  {/* Glow Effect */}
+  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-[radial-gradient(circle_at_top,rgba(249,115,22,0.15),transparent_55%)] pointer-events-none" />
+
+  {/* Image Section */}
+  <div className="relative h-56 w-full overflow-hidden">
+    <img
+      src={image || `https://source.unsplash.com/400x300/?coffee,beans,${name}`}
+      alt={name}
+      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+    />
+
+    {/* Dark Gradient Overlay */}
+    <div className="absolute inset-0 bg-gradient-to-t from-[#120b08] via-[#120b08]/30 to-transparent" />
+
+    {/* Roast Badge */}
+    {roast && (
+      <div className="absolute top-4 left-4">
+        <span className="rounded-full border border-orange-400/30 bg-orange-500/90 px-4 py-1 text-[10px] font-extrabold uppercase tracking-[0.25em] text-white shadow-lg backdrop-blur-md">
+          {roast}
+        </span>
+      </div>
+    )}
+
+    {/* Floating Price Badge */}
+    <div className="absolute bottom-4 right-4 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-2 shadow-lg">
+      <span className="text-xs uppercase tracking-[0.25em] text-orange-300 font-bold">
+        Price
+      </span>
+      <p className="text-2xl font-black text-white">
+        ${formatPrice(price)}
+      </p>
+    </div>
+  </div>
+
+  {/* Content */}
+  <div className="relative flex flex-1 flex-col p-6">
+    
+    {/* Product Name */}
+    <div className="mb-4">
+      <h3 className="text-2xl font-black tracking-tight text-white transition-colors duration-300 group-hover:text-orange-400">
+        {name}
+      </h3>
+
+      {/* Decorative Line */}
+      <div className="mt-3 h-[3px] w-16 rounded-full bg-gradient-to-r from-orange-500 to-amber-300 transition-all duration-500 group-hover:w-28" />
+    </div>
+
+    {/* Origin Tag */}
+    <div className="mb-5 flex items-center gap-2">
+      <span className="rounded-xl border border-orange-500/20 bg-orange-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-orange-300 backdrop-blur-md">
+        {origin}
+      </span>
+    </div>
+
+    {/* Description */}
+    <p className="mb-8 line-clamp-3 text-sm leading-relaxed text-stone-300">
+      {description}
+    </p>
+
+    {/* Footer */}
+    <div className="mt-auto flex items-center justify-between border-t border-orange-900/20 pt-5">
       
-      {/* 1. Image Header */}
-      <div className="relative h-52 w-full overflow-hidden">
-        <img 
-          src={image || "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=800&auto=format&fit=crop"} 
-          alt={name}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-        />
-        {/* Dark overlay gradient for text legibility if needed */}
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        
-        {/* Roast Tag - Floating over image */}
-        {roast && (
-          <div className="absolute top-4 left-4">
-            <span className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-stone-900 shadow-sm">
-              {roast}
-            </span>
-          </div>
+      {/* Coffee Quality Indicator */}
+      <div className="flex items-center gap-1">
+        <div className="h-2.5 w-2.5 rounded-full bg-orange-400 animate-pulse" />
+        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+          Premium Roast
+        </span>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center gap-3">
+        {onEdit && (
+          <button
+            onClick={() => onEdit(product)}
+            className="group/edit rounded-2xl border border-orange-500/20 bg-orange-500/10 p-3 text-orange-300 transition-all duration-300 hover:scale-105 hover:bg-orange-500 hover:text-white shadow-lg"
+            title="Edit Product"
+          >
+            <svg
+              className="h-5 w-5 transition-transform duration-300 group-hover/edit:rotate-12"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+              />
+            </svg>
+          </button>
+        )}
+
+        {onDelete && (
+          <button
+            onClick={() => {
+              if (window.confirm(`Remove ${name}?`)) onDelete(id);
+            }}
+            className="group/delete rounded-2xl border border-red-500/20 bg-red-500/10 p-3 text-red-400 transition-all duration-300 hover:scale-105 hover:bg-red-500 hover:text-white shadow-lg"
+            title="Delete Product"
+          >
+            <svg
+              className="h-5 w-5 transition-transform duration-300 group-hover/delete:shake"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          </button>
         )}
       </div>
-
-      {/* 2. Content Body */}
-      <div className="p-6 flex flex-col flex-1">
-        <div className="flex items-start justify-between mb-3">
-          <h3 className="text-xl font-black text-stone-900 tracking-tight leading-tight group-hover:text-amber-700 transition-colors">
-            {name}
-          </h3>
-        </div>
-
-        <div className="flex items-center gap-2 mb-4">
-           <span className="inline-flex items-center rounded-lg bg-stone-100 px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-stone-500">
-            {origin}
-          </span>
-        </div>
-
-        <p className="text-sm leading-relaxed text-stone-500 line-clamp-2 mb-6 italic">
-          "{description}"
-        </p>
-
-        {/* 3. Price & Stats */}
-        <div className="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400">Price</span>
-            <span className="text-2xl font-black text-stone-900">
-              ${formatPrice(price)}
-            </span>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-2">
-            {onEdit && (
-              <button 
-                onClick={() => onEdit(product)}
-                className="p-3 rounded-2xl bg-stone-100 text-stone-600 hover:bg-stone-900 hover:text-white transition-all shadow-sm active:scale-90"
-                title="Edit Product"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-              </button>
-            )}
-            
-            {onDelete && (
-              <button 
-                onClick={() => {
-                  if(window.confirm(`Remove ${name}?`)) onDelete(id);
-                }}
-                className="p-3 rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-90"
-                title="Delete Product"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Subtle hover accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-amber-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
     </div>
+  </div>
+
+  {/* Animated Top Accent */}
+  <div className="absolute top-0 left-0 h-1.5 w-full origin-left scale-x-0 bg-gradient-to-r from-orange-500 via-amber-400 to-orange-600 transition-transform duration-500 group-hover:scale-x-100" />
+</div>
   );
 };
 
