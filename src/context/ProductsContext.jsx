@@ -7,8 +7,8 @@ export function ProductsProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // FIX 1: Add the resource name 'coffee' (or whatever you named it) to the end
-  // MockAPI needs: base_url + /api/products + /your_resource
+  // MockAPI endpoint for the product inventory.
+  // Keep this value aligned with the remote resource path so the app can fetch and update products.
   const API_URL = 'https://6a0568f0aa826ca75c09c6d7.mockapi.io/api/products';
 
   const fetchProducts = async () => {
@@ -26,6 +26,7 @@ export function ProductsProvider({ children }) {
   };
 
   useEffect(() => {
+    // Load the inventory once when the provider mounts so the app can display current product data.
     fetchProducts();
   }, []);
 
@@ -44,31 +45,29 @@ export function ProductsProvider({ children }) {
     }
   };
 
-  // FIX 2: Check for valid ID and switch PATCH to PUT
   const updateProduct = async (id, updatedFields) => {
-  // If 'id' is undefined here, the URL becomes .../api/products/undefined
-  if (!id) {
-    console.error("Update failed: No ID provided"); // This is the error you saw
-    return;
-  }
+    if (!id) {
+      // Guard against invalid updates when the product ID is missing.
+      return;
+    }
 
-  try {
-    const response = await fetch(`${API_URL}/${id}`, {
-      method: 'PUT', // Reminder: Use PUT for MockAPI
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updatedFields),
-    });
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedFields),
+      });
 
-    if (!response.ok) throw new Error('Failed to update product');
-    const updatedProduct = await response.json();
+      if (!response.ok) throw new Error('Failed to update product');
+      const updatedProduct = await response.json();
 
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? updatedProduct : p))
-    );
-  } catch (err) {
-    alert(err.message);
-  }
-};
+      setProducts((prev) =>
+        prev.map((p) => (p.id === id ? updatedProduct : p))
+      );
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   const removeProduct = async (id) => {
     if (!id) return;

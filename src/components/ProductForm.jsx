@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
 export default function ProductForm({ initial, onSubmit }) {
-    // 1. Initialize state
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         price: '',
         origin: '',
-        location: 'Downtown', // Default value
+        location: 'Downtown',
         image: '' 
     });
 
-    // 2. The "Autofill" Logic
-    // Whenever the 'initial' prop changes (when you click edit), update the form fields
     useEffect(() => {
+        // Keep the form synchronized with the selected product.
+        // When editing, populate the inputs with the existing product values.
+        // When creating a new product, reset to the default empty state.
         if (initial) {
             setFormData({
                 name: initial.name || '',
@@ -24,7 +24,6 @@ export default function ProductForm({ initial, onSubmit }) {
                 image: initial.image || ''
             });
         } else {
-            // Reset form when not editing
             setFormData({ name: '', description: '', price: '', origin: '', location: 'Downtown', image: '' });
         }
     }, [initial]);
@@ -35,22 +34,23 @@ export default function ProductForm({ initial, onSubmit }) {
     };
 
     function handleSubmit(event) {
-  event.preventDefault();
-  
-  const productData = {
-    ...formData,
-    price: Number(formData.price),
-    // Ensure the ID stays attached if we are editing
-    ...(initial?.id && { id: initial.id }),
-    status: "active"
-  };
+        event.preventDefault();
 
-  onSubmit(productData);
+        const productData = {
+            ...formData,
+            price: Number(formData.price),
+            // Preserve the original product ID when editing so updates replace the same record.
+            ...(initial?.id && { id: initial.id }),
+            status: "active"
+        };
 
-  if (!initial?.id) {
-    setFormData({ name: '', description: '', price: '', origin: '', location: '', image: '' });
-  }
-}
+        onSubmit(productData);
+
+        if (!initial?.id) {
+            // Clear the form after creating a new product.
+            setFormData({ name: '', description: '', price: '', origin: '', location: 'Downtown', image: '' });
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
