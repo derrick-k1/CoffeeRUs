@@ -1,24 +1,20 @@
-import React, { useState } from 'react';
-import { useProducts } from '../context/ProductsContext';
-import ProductForm from '../components/ProductForm';
-import ProductCard from '../components/ProductCard';
+import React, { useState } from "react";
+import { useProducts } from "../context/ProductsContext";
+import ProductForm from "../components/ProductForm";
+import ProductCard from "../components/ProductCard";
 
 export default function Admin() {
-  const {
-    products,
-    addProduct,
-    updateProduct,
-    removeProduct,
-    loading
-  } = useProducts();
+  const { products, addProduct, updateProduct, removeProduct, loading } =
+    useProducts();
 
   const [editing, setEditing] = useState(null);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
 
   // FILTER PRODUCTS
-  const items = products.filter((p) =>
-    p.name.toLowerCase().includes(query.toLowerCase()) ||
-    p.origin.toLowerCase().includes(query.toLowerCase())
+  const items = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.origin.toLowerCase().includes(query.toLowerCase()),
   );
 
   if (loading)
@@ -31,7 +27,6 @@ export default function Admin() {
   return (
     <section className="min-h-screen bg-[#fafaf9] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-
         {/* HEADER */}
         <div className="mb-12">
           <h1 className="text-4xl font-black text-stone-900 tracking-tight">
@@ -45,33 +40,31 @@ export default function Admin() {
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-[460px_1fr] gap-12 items-start">
-
           {/* LEFT SIDE — FORM */}
           <aside className="lg:sticky lg:top-24">
-
             <div className="bg-white rounded-[2.5rem] border border-stone-200 shadow-xl overflow-hidden">
-
               {/* FORM HEADER */}
               <div className="bg-[#2d241e] p-10 text-white">
                 <h3 className="text-3xl font-black tracking-tight">
-                  {editing ? 'Edit Coffee' : 'Add New Blend'}
+                  {editing ? "Edit Coffee" : "Add New Blend"}
                 </h3>
 
                 <p className="text-stone-400 text-sm mt-2 leading-relaxed">
                   {editing
-                    ? 'Update the details for this specific product.'
-                    : 'Enter details for a new inventory item.'}
+                    ? "Update the details for this specific product."
+                    : "Enter details for a new inventory item."}
                 </p>
               </div>
 
               {/* FORM BODY */}
               <div className="p-10">
-               <ProductForm
-  initial={editing}
+                <ProductForm
+  initial={editing} // This is the 'product' object being edited
   onSubmit={(data) => {
     if (editing) {
+      // Ensure editing.id is passed here!
       updateProduct(editing.id, data);
-      setEditing(null); // Clear editing state after update
+      setEditing(null);
     } else {
       addProduct(data);
     }
@@ -87,18 +80,14 @@ export default function Admin() {
                   </button>
                 )}
               </div>
-
             </div>
           </aside>
 
           {/* RIGHT SIDE — PRODUCTS */}
           <main>
-
             {/* TOP BAR */}
             <div className="bg-white rounded-[2rem] border border-stone-200 shadow-xl p-6 mb-8">
-
               <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-
                 {/* TITLE */}
                 <div>
                   <h2 className="text-2xl font-black text-stone-900 tracking-tight">
@@ -120,26 +109,23 @@ export default function Admin() {
                     className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-sm text-stone-900 shadow-sm focus:border-amber-700 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all"
                   />
                 </div>
-
               </div>
-
             </div>
 
             {/* PRODUCT GRID */}
             {items.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {items.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onEdit={setEditing}
-                    onDelete={removeProduct}
-                  />
-                ))}
+  <ProductCard
+    key={product.id || Math.random()} // Fallback if ID is missing
+    product={product}
+    onEdit={setEditing}
+    onDelete={removeProduct}
+  />
+))}
               </div>
             ) : (
               <div className="bg-white rounded-[2.5rem] border-2 border-dashed border-stone-200 p-20 text-center">
-
                 <span className="text-5xl mb-4 block">☕</span>
 
                 <h3 className="text-2xl font-black text-stone-900">
@@ -152,18 +138,15 @@ export default function Admin() {
 
                 {query && (
                   <button
-                    onClick={() => setQuery('')}
+                    onClick={() => setQuery("")}
                     className="mt-6 rounded-2xl bg-stone-900 px-8 py-3 text-sm font-bold text-white hover:bg-stone-800 transition"
                   >
                     Clear Search
                   </button>
                 )}
-
               </div>
             )}
-
           </main>
-
         </div>
       </div>
     </section>

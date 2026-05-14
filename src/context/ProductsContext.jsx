@@ -7,9 +7,10 @@ export function ProductsProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // FIX 1: Add the resource name 'coffee' (or whatever you named it) to the end
+  // MockAPI needs: base_url + /api/products + /your_resource
   const API_URL = 'https://6a0568f0aa826ca75c09c6d7.mockapi.io/api/products';
 
-  // --- 1. Fetch All Products ---
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -28,7 +29,6 @@ export function ProductsProvider({ children }) {
     fetchProducts();
   }, []);
 
-  // --- 2. Add Product ---
   const addProduct = async (newProduct) => {
     try {
       const response = await fetch(API_URL, {
@@ -38,35 +38,40 @@ export function ProductsProvider({ children }) {
       });
       if (!response.ok) throw new Error('Failed to add product');
       const savedProduct = await response.json();
-      
-      // Update local state so UI updates instantly
       setProducts((prev) => [...prev, savedProduct]);
     } catch (err) {
       alert(err.message);
     }
   };
 
-  // --- 3. Update Product ---
+  // FIX 2: Check for valid ID and switch PATCH to PUT
   const updateProduct = async (id, updatedFields) => {
-    try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedFields),
-      });
-      if (!response.ok) throw new Error('Failed to update product');
-      const updatedProduct = await response.json();
+  // If 'id' is undefined here, the URL becomes .../api/products/undefined
+  if (!id) {
+    console.error("Update failed: No ID provided"); // This is the error you saw
+    return;
+  }
 
-      setProducts((prev) =>
-        prev.map((p) => (p.id === id ? updatedProduct : p))
-      );
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT', // Reminder: Use PUT for MockAPI
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedFields),
+    });
 
-  // --- 4. Delete Product ---
+    if (!response.ok) throw new Error('Failed to update product');
+    const updatedProduct = await response.json();
+
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? updatedProduct : p))
+    );
+  } catch (err) {
+    alert(err.message);
+  }
+};
+
   const removeProduct = async (id) => {
+    if (!id) return;
     try {
       const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete product');
@@ -86,7 +91,6 @@ export function ProductsProvider({ children }) {
   );
 }
 
-// Custom hook for easy usage
 export const useProducts = () => {
   const context = useContext(ProductsContext);
   if (!context) throw new Error("useProducts must be used within a ProductsProvider");

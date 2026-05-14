@@ -35,22 +35,22 @@ export default function ProductForm({ initial, onSubmit }) {
     };
 
     function handleSubmit(event) {
-        event.preventDefault();
-        
-        // 3. The "Save" Logic
-        onSubmit({
-            ...formData,
-            // If we are editing, keep the original ID. If new, MockAPI handles ID.
-            id: initial?.id, 
-            price: Number(formData.price),
-            status: "active"
-        });
+  event.preventDefault();
+  
+  const productData = {
+    ...formData,
+    price: Number(formData.price),
+    // Ensure the ID stays attached if we are editing
+    ...(initial?.id && { id: initial.id }),
+    status: "active"
+  };
 
-        // Clear form only if we were adding a new product
-        if (!initial) {
-            setFormData({ name: '', description: '', price: '', origin: '', location: 'Downtown', image: '' });
-        }
-    }
+  onSubmit(productData);
+
+  if (!initial?.id) {
+    setFormData({ name: '', description: '', price: '', origin: '', location: '', image: '' });
+  }
+}
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
