@@ -7,7 +7,7 @@ export function ProductsProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const API_URL = 'http://localhost:4000/coffee';
+  const API_URL = 'https://6a0568f0aa826ca75c09c6d7.mockapi.io/api/products';
 
   // --- 1. Fetch All Products ---
   const fetchProducts = async () => {
