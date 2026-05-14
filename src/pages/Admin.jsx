@@ -10,13 +10,20 @@ export default function Admin() {
   const [editing, setEditing] = useState(null);
   const [query, setQuery] = useState("");
 
-  // FILTER PRODUCTS
+  // =========================================================
+  // FILTER LOGIC
+  // =========================================================
+  // Filters products based on search input (name or origin)
   const items = products.filter(
     (p) =>
       p.name.toLowerCase().includes(query.toLowerCase()) ||
       (p.origin || "").toLowerCase().includes(query.toLowerCase())
   );
 
+  // =========================================================
+  // LOADING STATE
+  // =========================================================
+  // Shows spinner while data is being fetched from API
   if (loading)
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#fafaf9]">
@@ -27,7 +34,10 @@ export default function Admin() {
   return (
     <section className="min-h-screen bg-[#fafaf9] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* HEADER */}
+
+        {/* =========================================================
+        HEADER SECTION
+        ========================================================= */}
         <div className="mb-12">
           <h1 className="text-4xl font-black text-stone-900 tracking-tight">
             Inventory Manager
@@ -38,11 +48,17 @@ export default function Admin() {
           </p>
         </div>
 
-        {/* MAIN GRID */}
+        {/* =========================================================
+        MAIN LAYOUT (FORM + PRODUCTS)
+        ========================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-[460px_1fr] gap-12 items-start">
-          {/* LEFT SIDE — FORM */}
+
+          {/* =========================================================
+          LEFT SIDE — PRODUCT FORM
+          ========================================================= */}
           <aside className="lg:sticky lg:top-24">
             <div className="bg-white rounded-[2.5rem] border border-stone-200 shadow-xl overflow-hidden">
+
               {/* FORM HEADER */}
               <div className="bg-[#2d241e] p-10 text-white">
                 <h3 className="text-3xl font-black tracking-tight">
@@ -61,15 +77,18 @@ export default function Admin() {
                 <ProductForm
                   initial={editing}
                   onSubmit={(data) => {
+                    // If editing, update product
                     if (editing) {
                       updateProduct(editing.id, data);
                       setEditing(null);
                     } else {
+                      // Otherwise add new product
                       addProduct(data);
                     }
                   }}
                 />
 
+                {/* Cancel edit mode */}
                 {editing && (
                   <button
                     onClick={() => setEditing(null)}
@@ -82,12 +101,19 @@ export default function Admin() {
             </div>
           </aside>
 
-          {/* RIGHT SIDE — PRODUCTS */}
+          {/* =========================================================
+          RIGHT SIDE — PRODUCT LIST
+          ========================================================= */}
           <main>
-            {/* TOP BAR */}
+
+            {/* =========================================================
+            TOP BAR (TITLE + SEARCH)
+            ========================================================= */}
             <div className="bg-white rounded-[2rem] border border-stone-200 shadow-xl p-6 mb-8">
+
               <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-                {/* TITLE */}
+
+                {/* TITLE SECTION */}
                 <div>
                   <h2 className="text-2xl font-black text-stone-900 tracking-tight">
                     Current Stock
@@ -98,7 +124,13 @@ export default function Admin() {
                   </p>
                 </div>
 
-                {/* SEARCH BAR */}
+                {/* =====================================================
+                SEARCH BAR
+                =====================================================
+                - Stores user input in `query`
+                - Updates state on every keystroke
+                - Triggers live filtering of products
+                ===================================================== */}
                 <div className="w-full lg:max-w-md">
                   <input
                     type="text"
@@ -108,23 +140,46 @@ export default function Admin() {
                     className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-sm text-stone-900 shadow-sm focus:border-amber-700 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all"
                   />
                 </div>
+
               </div>
             </div>
 
-            {/* PRODUCT GRID */}
+            {/* =========================================================
+            PRODUCT GRID (ProductCard RENDERING)
+            ========================================================= */}
             {items.length > 0 ? (
+
+              // Grid layout for product cards
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                {/* Loop through each product and render a ProductCard */}
                 {items.map((product) => (
+
                   <ProductCard
+
+                    // Unique identifier for React rendering
                     key={product.id}
+
+                    // Pass full product data into card
                     product={product}
+
+                    // Function to enable edit mode
                     onEdit={setEditing}
+
+                    // Function to delete product from database/state
                     onDelete={removeProduct}
+
                   />
+
                 ))}
+
               </div>
+
             ) : (
+
+              // Empty state when no products match search
               <div className="bg-white rounded-[2.5rem] border-2 border-dashed border-stone-200 p-20 text-center">
+
                 <span className="text-5xl mb-4 block">☕</span>
 
                 <h3 className="text-2xl font-black text-stone-900">
@@ -135,6 +190,7 @@ export default function Admin() {
                   Try another search or add a new blend.
                 </p>
 
+                {/* Reset search */}
                 {query && (
                   <button
                     onClick={() => setQuery("")}
@@ -143,9 +199,12 @@ export default function Admin() {
                     Clear Search
                   </button>
                 )}
+
               </div>
             )}
+
           </main>
+
         </div>
       </div>
     </section>
