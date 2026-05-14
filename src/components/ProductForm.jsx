@@ -39,7 +39,6 @@ export default function ProductForm({ initial, onSubmit }) {
         const productData = {
             ...formData,
             price: Number(formData.price),
-            // Preserve the original product ID when editing so updates replace the same record.
             ...(initial?.id && { id: initial.id }),
             status: "active"
         };
@@ -47,7 +46,6 @@ export default function ProductForm({ initial, onSubmit }) {
         onSubmit(productData);
 
         if (!initial?.id) {
-            // Clear the form after creating a new product.
             setFormData({ name: '', description: '', price: '', origin: '', location: 'Downtown', image: '' });
         }
     }
