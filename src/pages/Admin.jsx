@@ -13,7 +13,7 @@ export default function Admin() {
   // FILTER PRODUCTS
   const items = products.filter(
     (p) =>
-      (p.name || "").toLowerCase().includes(query.toLowerCase()) ||
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
       (p.origin || "").toLowerCase().includes(query.toLowerCase())
   );
 
@@ -27,7 +27,6 @@ export default function Admin() {
   return (
     <section className="min-h-screen bg-[#fafaf9] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-
         {/* HEADER */}
         <div className="mb-12">
           <h1 className="text-4xl font-black text-stone-900 tracking-tight">
@@ -41,11 +40,9 @@ export default function Admin() {
 
         {/* MAIN GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-[460px_1fr] gap-12 items-start">
-
           {/* LEFT SIDE — FORM */}
           <aside className="lg:sticky lg:top-24">
             <div className="bg-white rounded-[2.5rem] border border-stone-200 shadow-xl overflow-hidden">
-
               {/* FORM HEADER */}
               <div className="bg-[#2d241e] p-10 text-white">
                 <h3 className="text-3xl font-black tracking-tight">
@@ -87,11 +84,9 @@ export default function Admin() {
 
           {/* RIGHT SIDE — PRODUCTS */}
           <main>
-
             {/* TOP BAR */}
             <div className="bg-white rounded-[2rem] border border-stone-200 shadow-xl p-6 mb-8">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-
                 {/* TITLE */}
                 <div>
                   <h2 className="text-2xl font-black text-stone-900 tracking-tight">
@@ -113,7 +108,6 @@ export default function Admin() {
                     className="w-full rounded-2xl border border-stone-200 bg-stone-50 px-5 py-4 text-sm text-stone-900 shadow-sm focus:border-amber-700 focus:outline-none focus:ring-4 focus:ring-amber-100 transition-all"
                   />
                 </div>
-
               </div>
             </div>
 
@@ -152,7 +146,6 @@ export default function Admin() {
               </div>
             )}
           </main>
-
         </div>
       </div>
     </section>
