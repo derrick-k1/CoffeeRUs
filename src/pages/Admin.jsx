@@ -66,17 +66,17 @@ export default function Admin() {
 
               {/* FORM BODY */}
               <div className="p-10">
-                <ProductForm
-                  initial={editing}
-                  onSubmit={
-                    editing
-                      ? (data) => {
-                          updateProduct(editing.id, data);
-                          setEditing(null);
-                        }
-                      : addProduct
-                  }
-                />
+               <ProductForm
+  initial={editing}
+  onSubmit={(data) => {
+    if (editing) {
+      updateProduct(editing.id, data);
+      setEditing(null); // Clear editing state after update
+    } else {
+      addProduct(data);
+    }
+  }}
+/>
 
                 {editing && (
                   <button
