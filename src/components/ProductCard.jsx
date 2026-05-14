@@ -20,7 +20,7 @@ import React from 'react';
 |--------------------------------------------------------------------------
 */
 
-const ProductCard = ({ product, onEdit, onDelete }) => {
+const ProductCard = ({ product, onEdit, onDelete, addToCart }) => {
 
   /*
   |--------------------------------------------------------------------------
@@ -237,6 +237,31 @@ const ProductCard = ({ product, onEdit, onDelete }) => {
           */}
 
           <div className="flex items-center gap-3">
+
+            {/* Add to Cart Button */}
+            {addToCart && (
+              <button
+                onClick={() => addToCart(product)}
+                className="group/cart rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-emerald-200 transition-all duration-300 hover:scale-105 hover:bg-emerald-500 hover:text-white shadow-lg"
+                title="Add to Cart"
+              >
+
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7a1 1 0 00.9 1.5h12.1M7 13l1.25-2.5M16 21a1 1 0 100-2 1 1 0 000 2zm-8 0a1 1 0 100-2 1 1 0 000 2z"
+                  />
+                </svg>
+
+              </button>
+            )}
 
             {/* Edit Button */}
             {onEdit && (

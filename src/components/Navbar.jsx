@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import { CartContext } from '../context/CartContext';
 
 function Navbar() {
+  const { cart } = useContext(CartContext);
+  const cartCount = cart.length;
+
   return (
     <header className="bg-gradient-to-r from-amber-500 to-orange-600 shadow-xl sticky top-0 z-50 border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,6 +50,25 @@ function Navbar() {
                   }
                 >
                   Shop
+                </NavLink>
+              </li>
+              <li>
+                <NavLink 
+                  to="/cart" 
+                  className={({ isActive }) =>
+                    `px-5 py-2.5 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
+                      isActive 
+                        ? 'bg-white text-orange-600 shadow-lg scale-105' 
+                        : 'text-white/90 hover:text-white hover:bg-white/10'
+                    }`
+                  }
+                >
+                  <span className="inline-flex items-center gap-2">
+                    Cart
+                    <span className="rounded-full bg-white text-orange-600 text-[10px] font-black px-2 py-1">
+                      {cartCount}
+                    </span>
+                  </span>
                 </NavLink>
               </li>
               

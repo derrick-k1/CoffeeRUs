@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Admin from './pages/Admin'
 import Shop from './pages/Shop'
+import Cart from './pages/Cart'
 import { CartProvider } from "./context/CartContext"
 import { ProductsProvider } from './context/ProductsContext'
 
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/shop' element={<Shop />} />
+          <Route path='/cart' element={<Cart />} />
           <Route path='/admin' element={<Admin />} />
         </Routes>
       </BrowserRouter>

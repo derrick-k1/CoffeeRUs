@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useProducts } from '../context/ProductsContext';
 import ProductCard from '../components/ProductCard';
+import { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 
 export default function Shop() {
 
   // Get products and loading state from Context API
   const { products, loading } = useProducts();
+
+  // Get cart state from Context API
+  const { cart, addToCart } = useContext(CartContext);
 
   // Search input state
   const [query, setQuery] = useState('');
@@ -256,6 +261,9 @@ export default function Shop() {
 
                   // Pass product data into ProductCard component
                   product={product}
+
+                  // Enable add-to-cart button inside the product card
+                  addToCart={addToCart}
 
                 />
 
