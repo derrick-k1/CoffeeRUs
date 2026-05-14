@@ -7,6 +7,8 @@ export function ProductsProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // MockAPI endpoint for the product inventory.
+  // Keep this value aligned with the remote resource path so the app can fetch and update products.
   const API_URL = 'https://6a0568f0aa826ca75c09c6d7.mockapi.io/api/products';
 
   const fetchProducts = async () => {
@@ -15,7 +17,15 @@ export function ProductsProvider({ children }) {
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error('Failed to fetch inventory');
       const data = await response.json();
-      setProducts(data);
+
+      // Ensure safe fallback for missing fields (IMPORTANT for Shop/Admin stability)
+      const safeData = data.map((p) => ({
+        ...p,
+        location: p.location || 'Unknown',
+        status: p.status || 'active',
+      }));
+
+      setProducts(safeData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -24,6 +34,7 @@ export function ProductsProvider({ children }) {
   };
 
   useEffect(() => {
+    // Load the inventory once when the provider mounts so the app can display current product data.
     fetchProducts();
   }, []);
 
@@ -34,10 +45,9 @@ export function ProductsProvider({ children }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newProduct),
       });
-
       if (!response.ok) throw new Error('Failed to add product');
-
       const savedProduct = await response.json();
+
       setProducts((prev) => [...prev, savedProduct]);
     } catch (err) {
       alert(err.message);
@@ -55,7 +65,6 @@ export function ProductsProvider({ children }) {
       });
 
       if (!response.ok) throw new Error('Failed to update product');
-
       const updatedProduct = await response.json();
 
       setProducts((prev) =>
@@ -70,10 +79,7 @@ export function ProductsProvider({ children }) {
     if (!id) return;
 
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE',
-      });
-
+      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Failed to delete product');
 
       setProducts((prev) => prev.filter((p) => p.id !== id));
@@ -83,16 +89,8 @@ export function ProductsProvider({ children }) {
   };
 
   return (
-    <ProductsContext.Provider
-      value={{
-        products,
-        loading,
-        error,
-        addProduct,
-        updateProduct,
-        removeProduct,
-        refresh: fetchProducts,
-      }}
+    <ProductsContext.Provider 
+      value={{ products, loading, error, addProduct, updateProduct, removeProduct, refresh: fetchProducts }}
     >
       {children}
     </ProductsContext.Provider>

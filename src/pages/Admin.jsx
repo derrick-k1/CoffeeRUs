@@ -17,7 +17,7 @@ export default function Admin() {
   const items = products.filter(
     (p) =>
       p.name.toLowerCase().includes(query.toLowerCase()) ||
-      (p.origin || "").toLowerCase().includes(query.toLowerCase())
+      p.origin.toLowerCase().includes(query.toLowerCase()),
   );
 
   // =========================================================
