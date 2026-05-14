@@ -4,13 +4,13 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Admin from './pages/Admin'
 import Shop from './pages/Shop'
-
-// 1. Import the Provider you just created
+import { CartProvider } from "./context/CartContext"
 import { ProductsProvider } from './context/ProductsContext'
 
 function App() {
   return (
     /* 2. Wrap the entire app so Context is available everywhere */
+  <CartProvider>
     <ProductsProvider>
       <BrowserRouter>
         <Navbar />
@@ -21,6 +21,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ProductsProvider>
+    </CartProvider>
   )
 }
 
